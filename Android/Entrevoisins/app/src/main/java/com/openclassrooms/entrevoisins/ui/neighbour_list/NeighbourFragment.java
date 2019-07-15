@@ -1,6 +1,7 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,8 +14,10 @@ import android.view.ViewGroup;
 import com.openclassrooms.entrevoisins.R;
 import com.openclassrooms.entrevoisins.di.DI;
 import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
+import com.openclassrooms.entrevoisins.events.FavoriteNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
 import com.openclassrooms.entrevoisins.service.NeighbourApiService;
+import com.openclassrooms.entrevoisins.ui.neighbour_details.DetailNeighbourActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,7 +64,17 @@ public class NeighbourFragment extends Fragment {
      */
     private void initList() {
         mNeighbours = mApiService.getNeighbours();
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(mNeighbours));
+		MyNeighbourRecyclerViewAdapter adapter = new MyNeighbourRecyclerViewAdapter(mNeighbours);
+        mRecyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new MyNeighbourRecyclerViewAdapter.OnItemClickListener() {
+			@Override
+			public void onItemClick(Neighbour neighbour) {
+				Intent intent = new Intent(getContext(), DetailNeighbourActivity.class);
+				intent.putExtra(DetailNeighbourActivity.EXTRA_NEIGHBOUR, neighbour);
+				startActivity(intent);
+			}
+		});
     }
 
     @Override
@@ -83,6 +96,12 @@ public class NeighbourFragment extends Fragment {
     @Subscribe
     public void onDeleteNeighbour(DeleteNeighbourEvent event) {
         mApiService.deleteNeighbour(event.neighbour);
+        initList();
+    }
+
+    @Subscribe
+    public void onFavoriteNeighbour(FavoriteNeighbourEvent event) {
+        mApiService.setNeighbourToFavorite(event.neighbour);
         initList();
     }
 }
