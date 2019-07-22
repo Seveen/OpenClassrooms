@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/detail_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/colorWhiteSmoke"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
-            android:id="@+id/relativeLayout"
+            android:id="@+id/detail_toolbar_relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -28,7 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:contentDescription=""
                 android:scrollbarTrackVertical="@null" />
 
             <ImageButton
@@ -45,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="32sp" />
         </RelativeLayout>
@@ -79,6 +78,7 @@
         tools:layout_editor_absoluteX="8dp">
 
         <LinearLayout
+            android:id="@+id/detail_cardView_user_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -89,12 +89,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:padding="8dp"
-                android:text="TextView"
+                android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="10pt"
                 tools:text="Caroline" />
 
             <View
+                android:id="@+id/detail_cardView_user_separator"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorWhiteSmoke" />
@@ -145,6 +146,7 @@
         app:layout_constraintTop_toBottomOf="@+id/detail_cardView">
 
         <LinearLayout
+            android:id="@+id/detail_cardView_about_me_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -160,6 +162,7 @@
                 android:textSize="10pt" />
 
             <View
+                android:id="@+id/detail_cardView_about_me_separator"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorWhiteSmoke" />
