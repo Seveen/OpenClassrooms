@@ -3,10 +3,13 @@ package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -22,6 +25,7 @@ import static android.support.test.espresso.contrib.RecyclerViewActions.actionOn
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
 import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.utils.DeleteViewAction;
 import com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion;
 
 import org.hamcrest.Description;
@@ -52,14 +56,27 @@ public class ListNeighbourActivityTest {
         RecyclerView recyclerView = mActivityTestRule.getActivity().findViewById(R.id.list_neighbours);
         int countBefore = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
 
-        onView(allOf(withId(R.id.item_list_delete_button),
-				childAtPosition(childAtPosition(withId(R.id.list_neighbours), 0),2),
-				isDisplayed()))
-				.perform(click());
+        onView(allOf(isDisplayed(), withId(R.id.list_neighbours)))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
 
         onView(allOf(isDisplayed(), withId(R.id.list_neighbours)))
-                .check(RecyclerViewItemCountAssertion.withItemCount(lessThan(countBefore)));
+                .check(RecyclerViewItemCountAssertion.withItemCount(countBefore - 1));
 	}
+
+	@Test
+    public void onlyFavoriteUsersOnFavoriteListTest() {
+        onView(
+                allOf(withContentDescription("Favorites"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.tabs),
+                                        0),
+                                1),
+                        isDisplayed())).perform(click());
+
+        RecyclerView recyclerView = mActivityTestRule.getActivity().findViewById(R.id.list_neighbours);
+        Log.d("TEST", Integer.toString(recyclerView.getAdapter().getItemCount()));
+    }
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {

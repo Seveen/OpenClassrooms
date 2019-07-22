@@ -51,8 +51,6 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 	@BindView(R.id.detail_floatingActionButton)
 	FloatingActionButton mAddFavoriteButton;
 
-	//TODO: Fix le probleme de toolbar qui ne prend pas toute la largeur de l'ecran
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,6 +72,8 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				EventBus.getDefault().post(new FavoriteNeighbourEvent(neighbour));
+				neighbour.setFavorite(!neighbour.getIsFavorite());
+				refreshFavoriteButton();
 			}
 		});
 
@@ -83,6 +83,8 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 				onBackPressed();
 			}
 		});
+
+		refreshFavoriteButton();
 	}
 
 	@Override
@@ -100,6 +102,13 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onFavoriteNeighbour(FavoriteNeighbourEvent event) {
 		mApiService.setNeighbourToFavorite(event.neighbour);
-		Toast.makeText(this, "Ajouté aux favoris", Toast.LENGTH_SHORT).show();
+	}
+
+	private void refreshFavoriteButton() {
+		if (neighbour.getIsFavorite()) {
+			mAddFavoriteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_orange_24dp));
+		} else {
+			mAddFavoriteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_border_orange_24dp));
+		}
 	}
 }

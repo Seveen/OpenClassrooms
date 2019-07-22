@@ -57,12 +57,11 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_star_orange_24dp"
+        android:src="@drawable/ic_star_border_orange_24dp"
         app:backgroundTint="@color/colorWhiteSmoke"
         app:layout_constraintBottom_toTopOf="@+id/detail_cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_toolbar"
-        app:rippleColor="#00000000" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_toolbar" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/detail_cardView"
