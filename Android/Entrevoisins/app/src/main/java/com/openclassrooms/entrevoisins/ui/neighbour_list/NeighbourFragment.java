@@ -31,19 +31,26 @@ public class NeighbourFragment extends Fragment {
     private List<Neighbour> mNeighbours;
     private RecyclerView mRecyclerView;
 
+    private boolean mIsFavoriteList;
+
+    public static String IS_FAVORITE_LIST = "IS_FAVORITE_LIST";
 
     /**
      * Create and return a new instance
      * @return @{@link NeighbourFragment}
      */
-    public static NeighbourFragment newInstance() {
+    public static NeighbourFragment newInstance(boolean isFavoriteList) {
         NeighbourFragment fragment = new NeighbourFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(IS_FAVORITE_LIST,isFavoriteList);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mIsFavoriteList = getArguments().getBoolean(IS_FAVORITE_LIST);
         mApiService = DI.getNeighbourApiService();
     }
 
@@ -63,7 +70,12 @@ public class NeighbourFragment extends Fragment {
      * Init the List of neighbours
      */
     private void initList() {
-        mNeighbours = mApiService.getNeighbours();
+        if (mIsFavoriteList) {
+            mNeighbours = mApiService.getFavoriteNeighbours();
+        } else {
+            mNeighbours = mApiService.getNeighbours();
+        }
+
 		MyNeighbourRecyclerViewAdapter adapter = new MyNeighbourRecyclerViewAdapter(mNeighbours);
         mRecyclerView.setAdapter(adapter);
 
@@ -80,6 +92,7 @@ public class NeighbourFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        initList();
         EventBus.getDefault().register(this);
     }
 
@@ -96,12 +109,6 @@ public class NeighbourFragment extends Fragment {
     @Subscribe
     public void onDeleteNeighbour(DeleteNeighbourEvent event) {
         mApiService.deleteNeighbour(event.neighbour);
-        initList();
-    }
-
-    @Subscribe
-    public void onFavoriteNeighbour(FavoriteNeighbourEvent event) {
-        mApiService.setNeighbourToFavorite(event.neighbour);
         initList();
     }
 }
