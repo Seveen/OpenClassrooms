@@ -10,8 +10,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/detail_toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        app:contentInsetStart="0dp"
         app:layout_constraintBottom_toTopOf="@id/detail_cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +27,9 @@
                 android:id="@+id/detail_avatar_imageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:contentDescription=""
+                android:scrollbarTrackVertical="@null" />
 
             <ImageButton
                 android:id="@+id/detail_back_btn"
