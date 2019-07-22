@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -20,10 +21,14 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.di.DI;
 import com.openclassrooms.entrevoisins.events.FavoriteNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
+import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +36,7 @@ import butterknife.ButterKnife;
 public class DetailNeighbourActivity extends AppCompatActivity {
 	public static String EXTRA_NEIGHBOUR = "EXTRA_NEIGHBOUR";
 	private Neighbour neighbour;
+	private NeighbourApiService mApiService;
 
 	@BindView(R.id.detail_avatar_imageView)
 	ImageView mAvatar;
@@ -47,12 +53,12 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 
 	//TODO: Fix le probleme de toolbar qui ne prend pas toute la largeur de l'ecran
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_neighbour);
 		ButterKnife.bind(this);
+		mApiService = DI.getNeighbourApiService();
 
 		Intent intent = getIntent();
 		neighbour = intent.getParcelableExtra(EXTRA_NEIGHBOUR);
@@ -77,5 +83,23 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 				onBackPressed();
 			}
 		});
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		EventBus.getDefault().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		EventBus.getDefault().unregister(this);
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onFavoriteNeighbour(FavoriteNeighbourEvent event) {
+		mApiService.setNeighbourToFavorite(event.neighbour);
+		Toast.makeText(this, "Ajouté aux favoris", Toast.LENGTH_SHORT).show();
 	}
 }
