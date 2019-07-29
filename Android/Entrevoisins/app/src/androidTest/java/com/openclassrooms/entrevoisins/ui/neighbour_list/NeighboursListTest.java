@@ -1,5 +1,5 @@
 
-package com.openclassrooms.entrevoisins.neighbour_list;
+package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -16,10 +16,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion.withItemCount;
 import static org.hamcrest.core.AllOf.allOf;
@@ -35,6 +38,7 @@ public class NeighboursListTest {
 
     // This is fixed
     private static int ITEMS_COUNT = 12;
+    private static int FAVORITE_COUNT = 1;
 
     private ListNeighbourActivity mActivity;
 
@@ -70,5 +74,12 @@ public class NeighboursListTest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(1, new DeleteViewAction()));
         // Then : the number of element is 11
         onView(allOf(isDisplayed(), withId(R.id.list_neighbours))).check(withItemCount(ITEMS_COUNT-1));
+    }
+
+    @Test
+    public void myFavoriteList_shouldHaveOnlyFavoriteUsers() {
+        onView(allOf(withContentDescription("Favorites"), isDisplayed())).perform(click());
+
+        onView(allOf(isDisplayed(), withId(R.id.list_neighbours))).check(matches(hasChildCount(FAVORITE_COUNT)));
     }
 }
