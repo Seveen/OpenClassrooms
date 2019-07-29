@@ -5,6 +5,7 @@
 Cloner le repository
 
 `git clone https://github.com/Seveen/OpenClassrooms.git`
+
 `cd OpenClassrooms`
 
 Lancer le projet dans Android Studio
