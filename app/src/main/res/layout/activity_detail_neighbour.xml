@@ -55,6 +55,7 @@
         android:id="@+id/detail_floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_star_border_orange_24dp"
